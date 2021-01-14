@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "98407513403",
+    "firebase_url": "https://membattle-561da.firebaseio.com",
+    "project_id": "membattle-561da",
+    "storage_bucket": "membattle-561da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:98407513403:android:51c74c2882348a0fbf0b1e",
+        "android_client_info": {
+          "package_name": "com.odinn.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "98407513403-38e6rv36rbhotu25p3ejs1s5mo4pt1ne.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.odinn.application",
+            "certificate_hash": "00411bac0f0a0c208523d59fb6500dc4d32a8f74"
+          }
+        },
+        {
+          "client_id": "98407513403-giou3ujm6g8kt0i4nqq25q3ujok4sct7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA43qkoTVHpAsZXcfLc6_-g7YXSBUn_Jo4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "98407513403-giou3ujm6g8kt0i4nqq25q3ujok4sct7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
