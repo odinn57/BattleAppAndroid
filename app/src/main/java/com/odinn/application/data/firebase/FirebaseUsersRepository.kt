@@ -1,27 +1,50 @@
-package com.odinn.application.activities.editprofile
+package com.odinn.application.data.firebase
 
 import android.arch.lifecycle.LiveData
 import android.net.Uri
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.EmailAuthProvider
-import com.odinn.application.activities.addfriends.toUnit
+import com.google.firebase.auth.FirebaseAuth
+import com.odinn.application.utils.toUnit
 import com.odinn.application.activities.asUser
 import com.odinn.application.activities.map
 import com.odinn.application.activities.task
+import com.odinn.application.data.UsersRepository
 import com.odinn.application.models.User
-import com.odinn.application.utils.currentUid
 import com.odinn.application.utils.*
 
 
-interface EditProfileRepository {
-    fun getUser(): LiveData<User>
-    fun uploadUserPhoto(localImage: Uri): Task<Uri>
-    fun updateUserPhoto(downloadUrl: Uri?) : Task<Unit>
-    fun updateEmail(currentEmail: String, newEmail: String, password: String): Task<Unit>
-    fun updateUserProfile(currentUser: User, newUser: User): Task<Unit>
-}
-class FirebaseEditProfileRepository : EditProfileRepository{
+class FirebaseUsersRepository : UsersRepository {
+    override fun getUsers(): LiveData<List<User>> =
+            database.child("users").liveData().map {
+                it.children.map { it.asUser()!! }
+            }
+
+    override fun addFollow(fromUid: String, toUid: String): Task<Unit>
+            = getFollowsRef(fromUid, toUid).setValue(true).toUnit()
+
+
+    override fun deleteFollow(fromUid: String, toUid: String): Task<Unit>
+            = getFollowsRef(fromUid, toUid).removeValue().toUnit()
+
+    override fun addFollower(fromUid: String, toUid: String): Task<Unit>
+            = getFollowersRef(fromUid, toUid).setValue(true).toUnit()
+
+
+    override fun deleteFollower(fromUid: String, toUid: String): Task<Unit>
+            = getFollowersRef(fromUid, toUid).removeValue().toUnit()
+
+
+    private fun getFollowsRef(fromUid: String, toUid: String)
+            = database.child("users").child(fromUid).child("follows").child(toUid)
+
+    private fun getFollowersRef(fromUid: String, toUid: String)
+            = database.child("users").child(toUid).child("followers").child(fromUid)
+
+    override fun currentUid()
+            = FirebaseAuth.getInstance().currentUser?.uid
+
     override fun getUser(): LiveData<User> =
             database.child("users").child(currentUid()!!).liveData().map {
                 it.asUser()!!

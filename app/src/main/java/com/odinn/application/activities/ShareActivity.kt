@@ -12,7 +12,7 @@ import com.odinn.application.utils.GlideApp
 import com.odinn.application.utils.ValueEventListenerAdapter
 import kotlinx.android.synthetic.main.activity_share.*
 
-class ShareActivity : BaseActivity(2) {
+class ShareActivity : BaseActivity() {
     private val TAG = "ShareActivity"
     private lateinit var mCamera: CameraHelper
     private lateinit var mFirebase: FirebaseHelper

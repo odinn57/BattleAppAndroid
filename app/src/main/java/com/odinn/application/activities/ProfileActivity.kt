@@ -17,9 +17,10 @@ import com.odinn.application.activities.editprofile.EditProfileActivity
 import com.odinn.application.models.User
 import com.odinn.application.utils.FirebaseHelper
 import com.odinn.application.utils.ValueEventListenerAdapter
+import com.odinn.application.views.setupBottomNavigation
 import kotlinx.android.synthetic.main.activity_profile.*
 
-class ProfileActivity : BaseActivity(4) {
+class ProfileActivity : BaseActivity() {
     private val TAG = "ProfileActivity"
     private lateinit var mFirebase: FirebaseHelper
     private lateinit var mUser: User
@@ -27,7 +28,7 @@ class ProfileActivity : BaseActivity(4) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        setupBottomNavigation()
+        setupBottomNavigation(4)
         Log.d(TAG, "onCreate")
 
         edit_profile_btn.setOnClickListener {

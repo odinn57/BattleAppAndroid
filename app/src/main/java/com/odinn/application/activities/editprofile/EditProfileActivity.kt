@@ -7,16 +7,13 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.odinn.application.R
-import com.odinn.application.activities.ViewModelFactory
+import com.odinn.application.activities.*
 import com.odinn.application.models.User
 import com.odinn.application.utils.CameraHelper
 import com.odinn.application.views.PasswordDialog
-import com.odinn.application.activities.loadUserPhoto
-import com.odinn.application.activities.showToast
-import com.odinn.application.activities.toStringOrNull
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 
-class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
+class EditProfileActivity : BaseActivity(), PasswordDialog.Listener {
 
     private lateinit var mUser: User
     private lateinit var mPendingUser: User
@@ -34,8 +31,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
         save_image.setOnClickListener { updateProfile() }
         change_photo_text.setOnClickListener { mCamera.takeCameraPicture() }
 
-        mViewModel = ViewModelProviders.of(this, ViewModelFactory())
-                .get(EditProfileViewModel::class.java)
+        mViewModel = initViewModel()
 
         mViewModel.user.observe(this, Observer{it?.let{
             mUser = it
@@ -51,9 +47,7 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == mCamera.REQUEST_CODE && resultCode == RESULT_OK) {
-            mViewModel.uploadAndSetUserPhoto(mCamera.imageUri!!).addOnFailureListener {
-                showToast(it.message)
-            }
+            mViewModel.uploadAndSetUserPhoto(mCamera.imageUri!!)
         }
     }
 
@@ -88,7 +82,6 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
                     currentEmail = mUser.email,
                     newEmail = mPendingUser.email,
                     password = password)
-                    .addOnFailureListener { showToast(it.message) }
                     .addOnSuccessListener { updateUser(mPendingUser) }
         } else {
             showToast(getString(R.string.you_should_enter_your_password))
@@ -97,7 +90,6 @@ class EditProfileActivity : AppCompatActivity(), PasswordDialog.Listener {
 
     private fun updateUser(user: User) {
         mViewModel.updateUserProfile(currentUser = mUser, newUser = user)
-                .addOnFailureListener { showToast(it.message) }
                 .addOnSuccessListener {
                     showToast(getString(R.string.profile_saved))
                     finish()
