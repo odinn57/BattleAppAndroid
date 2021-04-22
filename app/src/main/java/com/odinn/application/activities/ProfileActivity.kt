@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.odinn.application.R
 import com.odinn.application.activities.addfriends.AddFriendsActivity
+import com.odinn.application.activities.editprofile.EditProfileActivity
 import com.odinn.application.models.User
 import com.odinn.application.utils.FirebaseHelper
 import com.odinn.application.utils.ValueEventListenerAdapter

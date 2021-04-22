@@ -1,14 +1,14 @@
 package com.odinn.application.activities
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.odinn.application.R
 import kotlinx.android.synthetic.main.bottom_navigation_view.*
 
 abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
-    private val TAG = "BaseActivity"
-
     fun setupBottomNavigation() {
         bottom_navigation_view.setIconSize(29f, 29f)
         bottom_navigation_view.setTextVisibility(false)
@@ -43,10 +43,18 @@ abstract class BaseActivity(val navNumber: Int) : AppCompatActivity() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
     override fun onResume() {
         super.onResume()
         if (bottom_navigation_view != null) {
             bottom_navigation_view.menu.getItem(navNumber).isChecked = true
         }
+    }
+    companion object{
+        const val TAG = "BaseActivity"
     }
 }
