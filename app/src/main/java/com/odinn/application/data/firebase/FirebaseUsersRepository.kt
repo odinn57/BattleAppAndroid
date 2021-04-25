@@ -6,13 +6,12 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.odinn.application.utils.toUnit
-import com.odinn.application.activities.asUser
-import com.odinn.application.activities.map
-import com.odinn.application.activities.task
+import com.odinn.application.common.toUnit
+import com.odinn.application.data.common.map
+import com.odinn.application.common.task
 import com.odinn.application.data.UsersRepository
+import com.odinn.application.data.firebase.common.*
 import com.odinn.application.models.User
-import com.odinn.application.utils.*
 
 
 class FirebaseUsersRepository : UsersRepository {
