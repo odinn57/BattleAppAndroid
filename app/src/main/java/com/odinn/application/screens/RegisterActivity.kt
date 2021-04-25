@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.odinn.application.screens.common.coordinateBtnAndInputs
 import com.odinn.application.screens.common.showToast
+import com.odinn.application.screens.home.HomeActivity
 import kotlinx.android.synthetic.main.fragment_register_email.*
 import kotlinx.android.synthetic.main.fragment_register_namepass.*
 

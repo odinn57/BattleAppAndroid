@@ -9,6 +9,7 @@ import com.odinn.application.R
 import com.google.firebase.auth.FirebaseAuth
 import com.odinn.application.screens.common.coordinateBtnAndInputs
 import com.odinn.application.screens.common.showToast
+import com.odinn.application.screens.home.HomeActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEventListener

@@ -9,6 +9,7 @@ import android.util.Log
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.odinn.application.R
 import com.odinn.application.screens.*
+import com.odinn.application.screens.home.HomeActivity
 import kotlinx.android.synthetic.main.bottom_navigation_view.*
 
 class PhotoBattleBottomNavigation(private val bnv: BottomNavigationViewEx,
@@ -55,5 +56,6 @@ class PhotoBattleBottomNavigation(private val bnv: BottomNavigationViewEx,
 }
 
 fun BaseActivity.setupBottomNavigation(navNumber : Int){
-    PhotoBattleBottomNavigation(bottom_navigation_view, navNumber, this)
+    val bnv = PhotoBattleBottomNavigation(bottom_navigation_view, navNumber, this)
+    this.lifecycle.addObserver(bnv)
 }

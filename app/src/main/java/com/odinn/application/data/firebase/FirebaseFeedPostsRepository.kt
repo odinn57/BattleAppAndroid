@@ -1,12 +1,19 @@
 package com.odinn.application.data.firebase
 
+import android.arch.lifecycle.LiveData
 import com.google.android.gms.tasks.Task
 import com.odinn.application.common.toUnit
 import com.odinn.application.common.task
 import com.odinn.application.data.FeedPostsRepository
 import com.odinn.application.common.TaskSourceOnCompleteListener
 import com.odinn.application.common.ValueEventListenerAdapter
+import com.odinn.application.data.FeedPostLike
+import com.odinn.application.data.common.map
+import com.odinn.application.data.firebase.common.FirebaseLiveData
+import com.odinn.application.data.firebase.common.asFeedPost
 import com.odinn.application.data.firebase.common.database
+import com.odinn.application.data.firebase.common.setValueTrueOrRemove
+import com.odinn.application.models.FeedPost
 
 class FirebaseFeedPostsRepository : FeedPostsRepository {
     override fun copyFeedPosts(postsAuthorUid: String, uid: String): Task<Unit>
@@ -34,5 +41,28 @@ class FirebaseFeedPostsRepository : FeedPostsRepository {
                             .addOnCompleteListener(TaskSourceOnCompleteListener(taskSource))
                 })
     }
+
+    override fun getFeedPosts(uid: String): LiveData<List<FeedPost>> =
+        FirebaseLiveData(database.child("feed-posts").child(uid)).map{
+            it.children.map{ it.asFeedPost()!!}
+        }
+
+    override fun toggleLike(postId: String, uid: String) : Task<Unit> {
+        val reference = database.child("likes").child(postId).child(uid)
+        return task{taskSource ->
+            reference.addListenerForSingleValueEvent(ValueEventListenerAdapter {
+                reference.setValueTrueOrRemove(!it.exists())
+                taskSource.setResult(Unit)
+            })
+        }
+
+    }
+
+    override fun getLikes(postId: String): LiveData<List<FeedPostLike>> =
+        FirebaseLiveData(database.child("likes").child(postId)).map {
+            it.children.map{FeedPostLike(it.key)}
+        }
+
+
 
 }

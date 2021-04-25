@@ -22,6 +22,7 @@ import com.odinn.application.screens.common.loadUserPhoto
 import com.odinn.application.data.firebase.common.FirebaseHelper
 import com.odinn.application.common.ValueEventListenerAdapter
 import com.odinn.application.screens.common.setupBottomNavigation
+import com.odinn.application.screens.profilesettings.ProfileSettingsActivity
 import kotlinx.android.synthetic.main.activity_profile.*
 
 class ProfileActivity : BaseActivity() {
