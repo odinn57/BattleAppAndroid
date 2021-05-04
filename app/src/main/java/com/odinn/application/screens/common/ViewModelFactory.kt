@@ -9,10 +9,10 @@ import com.odinn.application.screens.addfriends.AddFriendsViewModel
 import com.odinn.application.data.firebase.FirebaseFeedPostsRepository
 import com.odinn.application.screens.editprofile.EditProfileViewModel
 import com.odinn.application.data.firebase.FirebaseUsersRepository
-import com.odinn.application.screens.LoginViewModel
-import com.odinn.application.screens.ProfileViewModel
-import com.odinn.application.screens.RegisterViewModel
-import com.odinn.application.screens.ShareViewModel
+import com.odinn.application.screens.login.LoginViewModel
+import com.odinn.application.screens.profile.ProfileViewModel
+import com.odinn.application.screens.register.RegisterViewModel
+import com.odinn.application.screens.share.ShareViewModel
 import com.odinn.application.screens.home.HomeViewModel
 import com.odinn.application.screens.profilesettings.ProfileSettingsViewModel
 

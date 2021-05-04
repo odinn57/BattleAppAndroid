@@ -1,4 +1,4 @@
-package com.odinn.application.screens
+package com.odinn.application.screens.share
 
 import android.arch.lifecycle.ViewModel
 import android.net.Uri

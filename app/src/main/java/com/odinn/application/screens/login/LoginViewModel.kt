@@ -1,4 +1,4 @@
-package com.odinn.application.screens
+package com.odinn.application.screens.login
 
 import android.app.Application
 import android.arch.lifecycle.LiveData

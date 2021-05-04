@@ -1,4 +1,4 @@
-package com.odinn.application.screens
+package com.odinn.application.screens.profile
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel

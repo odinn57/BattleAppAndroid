@@ -1,4 +1,4 @@
-package com.odinn.application.screens
+package com.odinn.application.screens.login
 
 import android.arch.lifecycle.Observer
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.odinn.application.R
+import com.odinn.application.screens.register.RegisterActivity
 import com.odinn.application.screens.common.BaseActivity
 import com.odinn.application.screens.common.coordinateBtnAndInputs
 import com.odinn.application.screens.common.setupAuthGuard

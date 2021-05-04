@@ -1,4 +1,4 @@
-package com.odinn.application.screens
+package com.odinn.application.screens.register
 
 import android.app.Application
 import android.arch.lifecycle.ViewModel

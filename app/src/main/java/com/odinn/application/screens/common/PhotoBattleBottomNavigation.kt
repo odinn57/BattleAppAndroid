@@ -8,8 +8,11 @@ import android.content.Intent
 import android.util.Log
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.odinn.application.R
-import com.odinn.application.screens.*
 import com.odinn.application.screens.home.HomeActivity
+import com.odinn.application.screens.likes.LikesActivity
+import com.odinn.application.screens.profile.ProfileActivity
+import com.odinn.application.screens.search.SearchActivity
+import com.odinn.application.screens.share.ShareActivity
 import kotlinx.android.synthetic.main.bottom_navigation_view.*
 
 class PhotoBattleBottomNavigation(private val bnv: BottomNavigationViewEx,
