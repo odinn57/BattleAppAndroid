@@ -6,12 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.odinn.application.R
 import com.odinn.application.models.User
-import com.odinn.application.screens.common.BaseActivity
-import com.odinn.application.screens.common.loadUserPhoto
-import com.odinn.application.screens.common.showToast
-import com.odinn.application.screens.common.toStringOrNull
-import com.odinn.application.screens.common.CameraHelper
-import com.odinn.application.screens.common.PasswordDialog
+import com.odinn.application.screens.common.*
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 
 class EditProfileActivity : BaseActivity(), PasswordDialog.Listener {
@@ -32,18 +27,22 @@ class EditProfileActivity : BaseActivity(), PasswordDialog.Listener {
         save_image.setOnClickListener { updateProfile() }
         change_photo_text.setOnClickListener { mCamera.takeCameraPicture() }
 
-        mViewModel = initViewModel()
+        setupAuthGuard {
+            mViewModel = initViewModel()
 
-        mViewModel.user.observe(this, Observer{it?.let{
-            mUser = it
-            name_input.setText(mUser.name)
-            username_input.setText(mUser.username)
-            website_input.setText(mUser.website)
-            bio_input.setText(mUser.bio)
-            email_input.setText(mUser.email)
-            phone_input.setText(mUser.phone?.toString())
-            profile_image.loadUserPhoto(mUser.photo)
-        }})
+            mViewModel.user.observe(this, Observer {
+                it?.let {
+                    mUser = it
+                    name_input.setText(mUser.name)
+                    username_input.setText(mUser.username)
+                    website_input.setText(mUser.website)
+                    bio_input.setText(mUser.bio)
+                    email_input.setText(mUser.email)
+                    phone_input.setText(mUser.phone?.toString())
+                    profile_image.loadUserPhoto(mUser.photo)
+                }
+            })
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

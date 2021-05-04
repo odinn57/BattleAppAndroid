@@ -6,11 +6,11 @@ import android.support.v7.widget.LinearLayoutManager
 import com.odinn.application.R
 import com.odinn.application.screens.common.BaseActivity
 import com.odinn.application.models.User
+import com.odinn.application.screens.common.setupAuthGuard
 import kotlinx.android.synthetic.main.activity_add_friends.*
 
 class AddFriendsActivity : BaseActivity(), FriendsAdapter.Listener {
     private lateinit var mUser: User
-    private lateinit var mUsers: List<User>
     private lateinit var mAdapter: FriendsAdapter
     private lateinit var mViewModel: AddFriendsViewModel
 
@@ -19,22 +19,23 @@ class AddFriendsActivity : BaseActivity(), FriendsAdapter.Listener {
         setContentView(R.layout.activity_add_friends)
 
         mAdapter = FriendsAdapter(this)
-        mViewModel = initViewModel()
 
-        back_image.setOnClickListener { finish() }
+        setupAuthGuard {
+            mViewModel = initViewModel()
 
-        add_friends_recycler.adapter = mAdapter
-        add_friends_recycler.layoutManager = LinearLayoutManager(this)
+            back_image.setOnClickListener { finish() }
 
-        mViewModel.userAndFriends.observe(this, Observer {
-            it?.let { (user, otherUser) ->
-                mUser = user
-                mUsers = otherUser
+            add_friends_recycler.adapter = mAdapter
+            add_friends_recycler.layoutManager = LinearLayoutManager(this)
 
-                mAdapter.update(mUsers, mUser.follows)
-                count_users.text = mAdapter.itemCount.toString()
-            }
-        })
+            mViewModel.userAndFriends.observe(this, Observer {
+                it?.let { (user, otherUser) ->
+                    mUser = user
+                    mAdapter.update(otherUser, mUser.follows)
+                    count_users.text = mAdapter.itemCount.toString()
+                }
+            })
+        }
     }
 
     override fun follow(uid: String) {

@@ -11,6 +11,7 @@ import com.odinn.application.data.common.map
 import com.odinn.application.common.task
 import com.odinn.application.data.UsersRepository
 import com.odinn.application.data.firebase.common.*
+import com.odinn.application.models.FeedPost
 import com.odinn.application.models.User
 
 
@@ -20,29 +21,22 @@ class FirebaseUsersRepository : UsersRepository {
                 it.children.map { it.asUser()!! }
             }
 
-    override fun addFollow(fromUid: String, toUid: String): Task<Unit>
-            = getFollowsRef(fromUid, toUid).setValue(true).toUnit()
+    override fun addFollow(fromUid: String, toUid: String): Task<Unit> = getFollowsRef(fromUid, toUid).setValue(true).toUnit()
 
 
-    override fun deleteFollow(fromUid: String, toUid: String): Task<Unit>
-            = getFollowsRef(fromUid, toUid).removeValue().toUnit()
+    override fun deleteFollow(fromUid: String, toUid: String): Task<Unit> = getFollowsRef(fromUid, toUid).removeValue().toUnit()
 
-    override fun addFollower(fromUid: String, toUid: String): Task<Unit>
-            = getFollowersRef(fromUid, toUid).setValue(true).toUnit()
+    override fun addFollower(fromUid: String, toUid: String): Task<Unit> = getFollowersRef(fromUid, toUid).setValue(true).toUnit()
 
 
-    override fun deleteFollower(fromUid: String, toUid: String): Task<Unit>
-            = getFollowersRef(fromUid, toUid).removeValue().toUnit()
+    override fun deleteFollower(fromUid: String, toUid: String): Task<Unit> = getFollowersRef(fromUid, toUid).removeValue().toUnit()
 
 
-    private fun getFollowsRef(fromUid: String, toUid: String)
-            = database.child("users").child(fromUid).child("follows").child(toUid)
+    private fun getFollowsRef(fromUid: String, toUid: String) = database.child("users").child(fromUid).child("follows").child(toUid)
 
-    private fun getFollowersRef(fromUid: String, toUid: String)
-            = database.child("users").child(toUid).child("followers").child(fromUid)
+    private fun getFollowersRef(fromUid: String, toUid: String) = database.child("users").child(toUid).child("followers").child(fromUid)
 
-    override fun currentUid()
-            = FirebaseAuth.getInstance().currentUser?.uid
+    override fun currentUid() = FirebaseAuth.getInstance().currentUser?.uid
 
     override fun getUser(): LiveData<User> =
             database.child("users").child(currentUid()!!).liveData().map {
@@ -50,7 +44,7 @@ class FirebaseUsersRepository : UsersRepository {
             }
 
     override fun uploadUserPhoto(localImage: Uri): Task<Uri> =
-            task {taskSource ->
+            task { taskSource ->
                 storage.child("users/${currentUid()!!}/photo")
                         .putFile(localImage).addOnSuccessListener {
                             taskSource.setResult(it?.downloadUrl!!)
@@ -84,6 +78,42 @@ class FirebaseUsersRepository : UsersRepository {
 
         return database.child("users").child(currentUid()!!).updateChildren(updatesMap).toUnit()
     }
+
+    override fun getImages(uid: String): LiveData<List<String>> =
+            FirebaseLiveData(database.child("images").child(uid)).map {
+                it.children.map { it.getValue(String::class.java)!! }
+            }
+
+    override fun isUserExistsForEmail(email: String): Task<Boolean> =
+            auth.fetchSignInMethodsForEmail(email).onSuccessTask {
+                val signInMethods = it?.signInMethods ?: emptyList<String>()
+                Tasks.forResult(signInMethods.isNotEmpty())
+            }
+
+    override fun createUser(user: User, password: String): Task<Unit> =
+            auth.createUserWithEmailAndPassword(user.email, password).onSuccessTask {
+                database.child("users").child(it!!.user.uid).setValue(user)
+            }.toUnit()
+
+    override fun uploadUserImage(uid: String, imageUri: Uri): Task<Uri> =
+            task { taskSource ->
+                storage.child("users").child(uid).child("images")
+                        .child(imageUri.lastPathSegment).putFile(imageUri).addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                taskSource.setResult(it.result.downloadUrl)
+                            } else {
+                                taskSource.setException(it.exception!!)
+                            }
+                        }
+            }
+
+    override fun setUserImage(uid: String, downloadUrl: Uri): Task<Unit> =
+            database.child("images").child(uid).push()
+                    .setValue(downloadUrl.toString()).toUnit()
+
+    override fun createFeedPost(uid: String, feedPost: FeedPost): Task<Unit> =
+            database.child("feed-posts").child(uid)
+                    .push().setValue(feedPost).toUnit()
 
 
 }
