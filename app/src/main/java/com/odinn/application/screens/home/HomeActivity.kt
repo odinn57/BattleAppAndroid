@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import com.odinn.application.R
+import com.odinn.application.screens.comments.CommentsActivity
 import com.odinn.application.screens.common.BaseActivity
 import com.odinn.application.screens.common.setupAuthGuard
 import com.odinn.application.screens.common.setupBottomNavigation
@@ -13,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), FeedAdapter.Listener {
     private lateinit var mAdapter: FeedAdapter
-    private lateinit var  mViewModel: HomeViewModel
+    private lateinit var mViewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,11 @@ class HomeActivity : BaseActivity(), FeedAdapter.Listener {
                     mAdapter.updatePosts(it)
                 }
             })
+            mViewModel.goToCommentsScreen.observe(this, Observer {
+                it?.let { postId ->
+                    CommentsActivity.start(this, postId)
+                }
+            })
         }
     }
 
@@ -43,16 +49,20 @@ class HomeActivity : BaseActivity(), FeedAdapter.Listener {
     }
 
     override fun loadLikes(postId: String, position: Int) {
-        if ( mViewModel.getLikes(postId) == null){
-            mViewModel.loadLikes(postId).observe(this, Observer{
-                it?.let{ postLikes ->
+        if (mViewModel.getLikes(postId) == null) {
+            mViewModel.loadLikes(postId).observe(this, Observer {
+                it?.let { postLikes ->
                     mAdapter.updatePostLikes(position, postLikes)
                 }
             })
         }
     }
 
-    companion object{
+    override fun openComments(postId: String) {
+        mViewModel.openComments(postId)
+    }
+
+    companion object {
         const val TAG = "HomeActivity"
     }
 }

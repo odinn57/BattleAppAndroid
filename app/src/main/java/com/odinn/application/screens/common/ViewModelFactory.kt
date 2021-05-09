@@ -9,6 +9,7 @@ import com.odinn.application.screens.addfriends.AddFriendsViewModel
 import com.odinn.application.data.firebase.FirebaseFeedPostsRepository
 import com.odinn.application.screens.editprofile.EditProfileViewModel
 import com.odinn.application.data.firebase.FirebaseUsersRepository
+import com.odinn.application.screens.comments.CommentsViewModel
 import com.odinn.application.screens.login.LoginViewModel
 import com.odinn.application.screens.profile.ProfileViewModel
 import com.odinn.application.screens.register.RegisterViewModel
@@ -32,16 +33,19 @@ class ViewModelFactory(private val app: Application,
         } else if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
             return HomeViewModel(onFailureListener, feedPostsRepo) as T
         } else if (modelClass.isAssignableFrom(ProfileSettingsViewModel::class.java)) {
-            return ProfileSettingsViewModel(authManager) as T
+            return ProfileSettingsViewModel(authManager, onFailureListener) as T
         } else if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(authManager, app, commonViewModel, onFailureListener) as T
         } else if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
-            return ProfileViewModel(usersRepo) as T
+            return ProfileViewModel(usersRepo,onFailureListener) as T
         } else if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel(commonViewModel, app, usersRepo) as T
+            return RegisterViewModel(commonViewModel, app,onFailureListener, usersRepo) as T
         } else if (modelClass.isAssignableFrom(ShareViewModel::class.java)) {
             return ShareViewModel(usersRepo, onFailureListener) as T
-        } else {
+        } else if(modelClass.isAssignableFrom(CommentsViewModel::class.java)){
+            return CommentsViewModel(feedPostsRepo, usersRepo, onFailureListener) as T
+        }
+        else {
             error("Unknown view model class $modelClass")
         }
     }

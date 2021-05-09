@@ -1,25 +1,16 @@
 package com.odinn.application.screens.home
 
-import android.graphics.Typeface
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.odinn.application.R
 import com.odinn.application.models.FeedPost
 import com.odinn.application.screens.common.SimpleCallback
 import com.odinn.application.screens.common.loadImage
 import com.odinn.application.screens.common.loadUserPhoto
-import com.odinn.application.screens.common.showToast
+import com.odinn.application.screens.common.setCaptionText
 import kotlinx.android.synthetic.main.feed_item.view.*
 
 class FeedAdapter(private val listener: Listener)
@@ -28,6 +19,7 @@ class FeedAdapter(private val listener: Listener)
     interface Listener {
         fun toggleLike(postId: String)
         fun loadLikes(postId: String, position: Int)
+        fun openComments(postId: String)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
@@ -60,7 +52,7 @@ class FeedAdapter(private val listener: Listener)
                 likes_text.visibility = View.VISIBLE
                 holder.view.context.resources.getQuantityString(R.plurals.likes_count, likes.likesCount)
                 val likesCountText = holder.view.context.resources.getQuantityString(R.plurals.likes_count,
-                                likes.likesCount, likes.likesCount)
+                        likes.likesCount, likes.likesCount)
                 likes_text.text = likesCountText
 
             }
@@ -69,26 +61,9 @@ class FeedAdapter(private val listener: Listener)
             like_image.setImageResource(
                     if (likes.likedByUser) R.drawable.ic_likes_active
                     else R.drawable.ic_likes_border)
+            comment_image.setOnClickListener { listener.openComments(post.id) }
             listener.loadLikes(post.id, position)
         }
-    }
-
-    private fun TextView.setCaptionText(username: String, caption: String) {
-        val usernameSpannable = SpannableString(username)
-        usernameSpannable.setSpan(StyleSpan(Typeface.BOLD), 0, usernameSpannable.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        usernameSpannable.setSpan(object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                widget.context.showToast(context.getString(R.string.username_is_clicked))
-            }
-
-            override fun updateDrawState(ds: TextPaint?) {}
-        }, 0, usernameSpannable.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        text = SpannableStringBuilder().append(usernameSpannable).append(" ")
-                .append(caption)
-        movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun getItemCount() = posts.size

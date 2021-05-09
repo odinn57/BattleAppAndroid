@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.odinn.application.models.Comment
 import com.odinn.application.models.FeedPost
 import com.odinn.application.models.User
 
@@ -17,6 +18,9 @@ fun DataSnapshot.asUser(): User? =
 
 fun DataSnapshot.asFeedPost(): FeedPost? =
         getValue(FeedPost::class.java)?.copy(id = key)
+
+fun DataSnapshot.asComment(): Comment? =
+        getValue(Comment::class.java)?.copy(id = key)
 
 fun DatabaseReference.setValueTrueOrRemove(value: Boolean) : Task<Void> =
         if (value) setValue(true) else removeValue()

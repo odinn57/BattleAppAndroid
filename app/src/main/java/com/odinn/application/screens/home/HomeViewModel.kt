@@ -1,17 +1,20 @@
 package com.odinn.application.screens.home
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
 import com.google.android.gms.tasks.OnFailureListener
+import com.odinn.application.common.SingleLiveEvent
 import com.odinn.application.data.FeedPostsRepository
 import com.odinn.application.data.common.map
 import com.odinn.application.models.FeedPost
+import com.odinn.application.screens.common.BaseViewModel
 
-class HomeViewModel(private val onFailureListener : OnFailureListener,
-                    private val feedPostsRepo : FeedPostsRepository) : ViewModel() {
+class HomeViewModel(onFailureListener: OnFailureListener,
+                    private val feedPostsRepo: FeedPostsRepository) : BaseViewModel(onFailureListener) {
     lateinit var uid: String
     lateinit var feedPosts: LiveData<List<FeedPost>>
     private var loadedLikes = mapOf<String, LiveData<FeedPostLikes>>()
+    private val _goToCommentsScreen = SingleLiveEvent<String>()
+    val goToCommentsScreen = _goToCommentsScreen
 
     fun init(uid: String) {
         this.uid = uid
@@ -28,7 +31,7 @@ class HomeViewModel(private val onFailureListener : OnFailureListener,
 
     fun loadLikes(postId: String): LiveData<FeedPostLikes> {
         val existingloadedLikes = loadedLikes[postId]
-        if ( existingloadedLikes == null) {
+        if (existingloadedLikes == null) {
             val liveData = feedPostsRepo.getLikes(postId).map { likes ->
                 FeedPostLikes(
                         likesCount = likes.size,
@@ -37,9 +40,13 @@ class HomeViewModel(private val onFailureListener : OnFailureListener,
             }
             loadedLikes += postId to liveData
             return liveData
-        }else{
+        } else {
             return existingloadedLikes
         }
+    }
+
+    fun openComments(postId: String) {
+        _goToCommentsScreen.value = postId
     }
 }
 

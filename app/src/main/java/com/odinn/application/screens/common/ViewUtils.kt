@@ -2,17 +2,21 @@ package com.odinn.application.screens.common
 
 import android.app.Activity
 import android.content.Context
-import android.text.Editable
-import android.text.TextWatcher
+import android.graphics.Typeface
+import android.support.v4.content.ContextCompat
+import android.text.*
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import com.odinn.application.R
+import com.odinn.application.common.formatRelativeTimestamp
+import java.util.*
 
 fun Context.showToast(text: String?, duration: Int = Toast.LENGTH_SHORT) {
-    text?.let{Toast.makeText(this, it, duration).show() }
+    text?.let { Toast.makeText(this, it, duration).show() }
 }
 
 fun coordinateBtnAndInputs(btn: Button, vararg inputs: EditText) {
@@ -28,6 +32,39 @@ fun coordinateBtnAndInputs(btn: Button, vararg inputs: EditText) {
     }
     inputs.forEach { it.addTextChangedListener(watcher) }
     btn.isEnabled = inputs.all { it.text.isNotEmpty() }
+}
+
+fun TextView.setCaptionText(username: String, caption: String, date: Date? = null) {
+    val usernameSpannable = SpannableString(username)
+    usernameSpannable.setSpan(StyleSpan(Typeface.BOLD), 0, usernameSpannable.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    usernameSpannable.setSpan(object : ClickableSpan() {
+        override fun onClick(widget: View) {
+            widget.context.showToast(context.getString(R.string.username_is_clicked))
+        }
+
+        override fun updateDrawState(ds: TextPaint?) {}
+    }, 0, usernameSpannable.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+    val dateSpannable = date?.let {
+        val dateText = formatRelativeTimestamp(date, Date())
+        val spannableString = SpannableString(dateText)
+        spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.grey)), 0, dateText.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString
+    }
+
+    text = SpannableStringBuilder().apply{
+        append(usernameSpannable)
+        append(" ")
+        append(caption)
+        dateSpannable?.let {
+            append(" ")
+            append(it)
+        }
+    }
+        movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun Editable.toStringOrNull(): String? {
@@ -49,5 +86,7 @@ private fun View.ifNotDestroyed(block: () -> Unit) {
     if (!(context as Activity).isDestroyed) {
         block()
     }
+
+
 }
 

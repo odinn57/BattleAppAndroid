@@ -1,7 +1,6 @@
 package com.odinn.application.screens.common
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -22,7 +21,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
         })
     }
-    protected inline fun <reified T:ViewModel> initViewModel() : T =
+    protected inline fun <reified T:BaseViewModel> initViewModel() : T =
         ViewModelProviders.of(this, ViewModelFactory(application, commonViewModel, commonViewModel)).get(T::class.java)
 
     fun goToLogin() {

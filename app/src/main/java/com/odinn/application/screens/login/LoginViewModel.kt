@@ -7,12 +7,13 @@ import com.google.android.gms.tasks.OnFailureListener
 import com.odinn.application.R
 import com.odinn.application.common.AuthManager
 import com.odinn.application.common.SingleLiveEvent
+import com.odinn.application.screens.common.BaseViewModel
 import com.odinn.application.screens.common.CommonViewModel
 
 class LoginViewModel( private val authManager: AuthManager,
                       private val app: Application,
                       private val commonViewModel: CommonViewModel,
-                      private val onFailureListener: OnFailureListener): ViewModel(){
+                      onFailureListener: OnFailureListener): BaseViewModel(onFailureListener){
     private val _goToHomeScreen = SingleLiveEvent<Unit>()
     val goToHomeScreen: LiveData<Unit> = _goToHomeScreen
     private val _goToRegisterScreen = SingleLiveEvent<Unit>()
