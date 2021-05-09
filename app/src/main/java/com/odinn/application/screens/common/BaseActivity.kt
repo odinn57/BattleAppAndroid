@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.odinn.application.screens.PhotoBattleApp
 import com.odinn.application.screens.login.LoginActivity
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -16,13 +17,17 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         commonViewModel = ViewModelProviders.of(this).get(CommonViewModel::class.java)
         commonViewModel.errorMessage.observe(this, Observer {
-            it?.let{
+            it?.let {
                 showToast(it)
             }
         })
     }
-    protected inline fun <reified T:BaseViewModel> initViewModel() : T =
-        ViewModelProviders.of(this, ViewModelFactory(application, commonViewModel, commonViewModel)).get(T::class.java)
+
+    protected inline fun <reified T : BaseViewModel> initViewModel(): T =
+            ViewModelProviders.of(this, ViewModelFactory(
+                    application as PhotoBattleApp,
+                    commonViewModel,
+                    commonViewModel)).get(T::class.java)
 
     fun goToLogin() {
         startActivity(Intent(this, LoginActivity::class.java))
@@ -30,7 +35,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
 
-    companion object{
+    companion object {
         const val TAG = "BaseActivity"
     }
 }

@@ -32,22 +32,22 @@ class LoginActivity : BaseActivity(), KeyboardVisibilityEventListener, View.OnCl
         create_account_text.setOnClickListener(this)
         register_btn.setOnClickListener(this)
 
-        setupAuthGuard {
-            mViewModel = initViewModel()
-            mViewModel.goToHomeScreen.observe(this, Observer {
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
-            })
-            mViewModel.goToRegisterScreen.observe(this, Observer {
-                startActivity(Intent(this, RegisterActivity::class.java))
-            })
-            mAuth = FirebaseAuth.getInstance()
-        }
+
+        mViewModel = initViewModel()
+        mViewModel.goToHomeScreen.observe(this, Observer {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        })
+        mViewModel.goToRegisterScreen.observe(this, Observer {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        })
+        mAuth = FirebaseAuth.getInstance()
+
 
     }
 
     override fun onClick(view: View) {
-        when(view.id) {
+        when (view.id) {
             R.id.login_btn ->
                 mViewModel.onLoginClick(
                         email = email_input.text.toString(),
@@ -67,7 +67,7 @@ class LoginActivity : BaseActivity(), KeyboardVisibilityEventListener, View.OnCl
         }
     }
 
-    companion object{
+    companion object {
         const val TAG = "LoginActivity"
     }
 }

@@ -111,9 +111,4 @@ class FirebaseUsersRepository : UsersRepository {
             database.child("images").child(uid).push()
                     .setValue(downloadUrl.toString()).toUnit()
 
-    override fun createFeedPost(uid: String, feedPost: FeedPost): Task<Unit> =
-            database.child("feed-posts").child(uid)
-                    .push().setValue(feedPost).toUnit()
-
-
 }

@@ -3,12 +3,14 @@ package com.odinn.application.screens.share
 import android.net.Uri
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Tasks
+import com.odinn.application.data.FeedPostsRepository
 import com.odinn.application.data.UsersRepository
 import com.odinn.application.models.FeedPost
 import com.odinn.application.models.User
 import com.odinn.application.screens.common.BaseViewModel
 
-class ShareViewModel(private val usersRepo: UsersRepository,  onFailureListener: OnFailureListener) : BaseViewModel(onFailureListener) {
+class ShareViewModel(private val feedPostsRepo: FeedPostsRepository,
+                     private val usersRepo: UsersRepository, onFailureListener: OnFailureListener) : BaseViewModel(onFailureListener) {
 
     val user = usersRepo.getUser()
 
@@ -17,7 +19,7 @@ class ShareViewModel(private val usersRepo: UsersRepository,  onFailureListener:
             usersRepo.uploadUserImage(user.uid, imageUri).onSuccessTask { downloadUri ->
                 Tasks.whenAll(
                         usersRepo.setUserImage(user.uid, downloadUri!!),
-                        usersRepo.createFeedPost(user.uid, mkFeedPost(user, caption, downloadUri.toString()))
+                        feedPostsRepo.createFeedPost(user.uid, mkFeedPost(user, caption, downloadUri.toString()))
                 ).addOnFailureListener(onFailureListener)
             }
         }

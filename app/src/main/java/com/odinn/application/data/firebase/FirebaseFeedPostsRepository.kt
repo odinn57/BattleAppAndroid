@@ -2,12 +2,12 @@ package com.odinn.application.data.firebase
 
 import android.arch.lifecycle.LiveData
 import com.google.android.gms.tasks.Task
-import com.odinn.application.common.toUnit
-import com.odinn.application.common.task
-import com.odinn.application.data.FeedPostsRepository
 import com.odinn.application.common.TaskSourceOnCompleteListener
 import com.odinn.application.common.ValueEventListenerAdapter
+import com.odinn.application.common.task
+import com.odinn.application.common.toUnit
 import com.odinn.application.data.FeedPostLike
+import com.odinn.application.data.FeedPostsRepository
 import com.odinn.application.data.common.map
 import com.odinn.application.data.firebase.common.*
 import com.odinn.application.models.Comment
@@ -67,6 +67,10 @@ class FirebaseFeedPostsRepository : FeedPostsRepository {
 
     override fun createComment(postId: String, comment: Comment): Task<Unit> =
             database.child("comments").child(postId).push().setValue(comment).toUnit()
+
+    override fun createFeedPost(uid: String, feedPost: FeedPost): Task<Unit> =
+            database.child("feed-posts").child(uid)
+                    .push().setValue(feedPost).toUnit()
 
 
 }
