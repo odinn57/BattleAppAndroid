@@ -9,7 +9,7 @@ import android.util.Log
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
 import com.odinn.application.R
 import com.odinn.application.screens.home.HomeActivity
-import com.odinn.application.screens.likes.LikesActivity
+import com.odinn.application.screens.notifications.NotificationsActivity
 import com.odinn.application.screens.profile.ProfileActivity
 import com.odinn.application.screens.search.SearchActivity
 import com.odinn.application.screens.share.ShareActivity
@@ -38,7 +38,7 @@ class PhotoBattleBottomNavigation(private val bnv: BottomNavigationViewEx,
                         R.id.nav_item_home -> HomeActivity::class.java
                         R.id.nav_item_search -> SearchActivity::class.java
                         R.id.nav_item_share -> ShareActivity::class.java
-                        R.id.nav_item_likes -> LikesActivity::class.java
+                        R.id.nav_item_likes -> NotificationsActivity::class.java
                         R.id.nav_item_profile -> ProfileActivity::class.java
                         else -> {
                             Log.e(BaseActivity.TAG, "unknown nav item clicked $it")

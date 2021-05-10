@@ -55,7 +55,7 @@ fun TextView.setCaptionText(username: String, caption: String, date: Date? = nul
         spannableString
     }
 
-    text = SpannableStringBuilder().apply{
+    text = SpannableStringBuilder().apply {
         append(usernameSpannable)
         append(" ")
         append(caption)
@@ -64,7 +64,7 @@ fun TextView.setCaptionText(username: String, caption: String, date: Date? = nul
             append(it)
         }
     }
-        movementMethod = LinkMovementMethod.getInstance()
+    movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun Editable.toStringOrNull(): String? {
@@ -80,6 +80,14 @@ fun ImageView.loadUserPhoto(photoUrl: String?) =
 fun ImageView.loadImage(image: String?) =
         ifNotDestroyed {
             GlideApp.with(this).load(image).centerCrop().into(this)
+        }
+
+fun ImageView.loadImageOrHide(image: String?) =
+        if (image != null) {
+            visibility = View.VISIBLE
+            loadImage(image)
+        } else {
+            visibility = View.GONE
         }
 
 private fun View.ifNotDestroyed(block: () -> Unit) {

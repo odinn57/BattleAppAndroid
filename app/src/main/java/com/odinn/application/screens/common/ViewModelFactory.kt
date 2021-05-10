@@ -12,6 +12,7 @@ import com.odinn.application.screens.comments.CommentsViewModel
 import com.odinn.application.screens.editprofile.EditProfileViewModel
 import com.odinn.application.screens.home.HomeViewModel
 import com.odinn.application.screens.login.LoginViewModel
+import com.odinn.application.screens.notifications.NotificationsViewModel
 import com.odinn.application.screens.profile.ProfileViewModel
 import com.odinn.application.screens.profilesettings.ProfileSettingsViewModel
 import com.odinn.application.screens.register.RegisterViewModel
@@ -25,6 +26,7 @@ class ViewModelFactory(private val app: PhotoBattleApp,
         val feedPostsRepo = app.feedPostsRepo
         val usersRepo = app.usersRepo
         val authManager = app.authManager
+        val notificationsRepo = app.notificationsRepo
 
         if (modelClass.isAssignableFrom(AddFriendsViewModel::class.java)) {
             return AddFriendsViewModel(onFailureListener, usersRepo, feedPostsRepo) as T
@@ -44,8 +46,9 @@ class ViewModelFactory(private val app: PhotoBattleApp,
             return ShareViewModel(feedPostsRepo,usersRepo, onFailureListener) as T
         } else if(modelClass.isAssignableFrom(CommentsViewModel::class.java)){
             return CommentsViewModel(feedPostsRepo, usersRepo, onFailureListener) as T
-        }
-        else {
+        }  else if (modelClass.isAssignableFrom(NotificationsViewModel::class.java)) {
+            return NotificationsViewModel(notificationsRepo, onFailureListener) as T
+        }else {
             error("Unknown view model class $modelClass")
         }
     }

@@ -6,12 +6,14 @@ import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.odinn.application.common.toUnit
-import com.odinn.application.data.common.map
+import com.google.firebase.database.DataSnapshot
+import com.odinn.application.common.Event
+import com.odinn.application.common.EventBus
 import com.odinn.application.common.task
+import com.odinn.application.common.toUnit
 import com.odinn.application.data.UsersRepository
+import com.odinn.application.data.common.map
 import com.odinn.application.data.firebase.common.*
-import com.odinn.application.models.FeedPost
 import com.odinn.application.models.User
 
 
@@ -21,7 +23,11 @@ class FirebaseUsersRepository : UsersRepository {
                 it.children.map { it.asUser()!! }
             }
 
-    override fun addFollow(fromUid: String, toUid: String): Task<Unit> = getFollowsRef(fromUid, toUid).setValue(true).toUnit()
+    override fun addFollow(fromUid: String, toUid: String): Task<Unit> =
+            getFollowsRef(fromUid, toUid).setValue(true).toUnit()
+                    .addOnSuccessListener {
+                        EventBus.publish(Event.CreateFollow(fromUid, toUid))
+                    }
 
 
     override fun deleteFollow(fromUid: String, toUid: String): Task<Unit> = getFollowsRef(fromUid, toUid).removeValue().toUnit()
@@ -38,8 +44,11 @@ class FirebaseUsersRepository : UsersRepository {
 
     override fun currentUid() = FirebaseAuth.getInstance().currentUser?.uid
 
-    override fun getUser(): LiveData<User> =
-            database.child("users").child(currentUid()!!).liveData().map {
+    override fun getUser(): LiveData<User> = getUser(currentUid()!!)
+
+
+    override fun getUser(uid: String): LiveData<User> =
+            database.child("users").child(uid).liveData().map {
                 it.asUser()!!
             }
 
@@ -111,4 +120,8 @@ class FirebaseUsersRepository : UsersRepository {
             database.child("images").child(uid).push()
                     .setValue(downloadUrl.toString()).toUnit()
 
+    private fun DataSnapshot.asUser(): User? =
+            getValue(User::class.java)?.copy(uid = key)
+
 }
+
